@@ -4,6 +4,7 @@ Obstacle bar1;
 Obstacle bar2;
 Obstacle bar3;
 int score;
+boolean IsGameOver = false;
 
 void setup() {
     size(1000,400);
@@ -15,13 +16,26 @@ void setup() {
 
 }
 void draw() {
-    background(255);
-    countScore();
-    dog.update();
-    dog.display();
-    score+=1;
-    updateObstacles();
-    checkCollision();
+    if(IsGameOver){
+        background(255);
+        dog.display();
+        bar.display();
+        textSize(64);
+        fill(#98295F);
+        text("GAME OVER",200,100);
+        if (keyPressed&&key==ENTER){
+            IsGameOver=false;
+            score=0;
+        }
+    }else{
+        background(255);
+        countScore();
+        dog.update();
+        dog.display();
+        score+=1;
+        updateObstacles();
+        checkCollision();
+    }    
 }
 
 void updateObstacles(){
@@ -39,10 +53,6 @@ void countScore(){
     textSize(64);
     fill(#98295F);
     text("SCORE:"+str,200,100);
-    }else{
-        textSize(64);
-        fill(#98295F);
-        text("GAME OVER",200,100);
     }
 }
 
@@ -53,6 +63,7 @@ void checkCollision(){
             score-=800;
             println(""+score/10);
             bar.active=false;
+            IsGameOver=true;
         }
 
     }
