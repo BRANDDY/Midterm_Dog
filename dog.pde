@@ -12,9 +12,11 @@ void setup() {
     dog.sprite = loadImage("stand.jpg");
     bar.selectBar();
     score=0;
+
 }
 void draw() {
     background(255);
+    countScore();
     dog.update();
     dog.display();
     score+=1;
@@ -31,14 +33,28 @@ void updateObstacles(){
     bar.display();
 }
 
+void countScore(){
+    String str=String.format("% 10d",score/10);
+    if (score/10>=0){
+    textSize(64);
+    fill(#98295F);
+    text("SCORE:"+str,200,100);
+    }else{
+        textSize(64);
+        fill(#98295F);
+        text("GAME OVER",200,100);
+    }
+}
+
 void checkCollision(){
-    if(((dog.location.x<bar.location.x+70)&&(dog.location.x+138>bar.location.x+15))&&
-    ((dog.location.y<bar.location.y+70)&&(dog.location.y+106>bar.location.y+15))){
+    if(((dog.location.x<bar.location.x+70)&&(dog.location.x+138>bar.location.x+20))&&
+    ((dog.location.y<bar.location.y+70)&&(dog.location.y+106>bar.location.y+20))){
         if(bar.active){
             score-=800;
             println(""+score/10);
             bar.active=false;
         }
+
     }
 }
 
@@ -72,7 +88,7 @@ class Obstacle{
 class Mover{
     PImage sprite;
     PVector speed=new PVector(0,-25);
-    PVector acc=new PVector(0,1);
+    PVector acc=new PVector(0,1.1);
     PVector location=new PVector(0,260);
 
     void update() {
