@@ -26,6 +26,7 @@ void draw() {
         if (keyPressed&&key==ENTER){
             IsGameOver=false;
             score=0;
+            bar.selectBar();
         }
     }else{
         background(255);
