@@ -5,9 +5,12 @@ Obstacle bar2;
 Obstacle bar3;
 int score;
 boolean IsGameOver = false;
+boolean GameStart = false;
 
 void setup() {
     size(1000,400);//画布大小
+    PImage curImg=loadImage("cursor.png");
+    cursor(curImg);//光标
     dog = new Mover();
     bar = new Obstacle();
     dog.sprite = loadImage("stand.jpg");//初始dog图片
@@ -15,8 +18,10 @@ void setup() {
     score=0;//初始分数
 }
 void draw() {
+    startPage();
+    /*
+    background(255);//覆盖画布
     if(IsGameOver){
-        background(255);//覆盖画布
         bar.display();
         dog.display();//游戏结束保持画面静止
         if (keyPressed&&key==ENTER){//一键复活
@@ -25,22 +30,36 @@ void draw() {
             bar.selectBar();//重置bar
         }
     }else{
-        background(255);
-        updateObstacles();
+        updateObstacles();//重置bar
         dog.update();
         dog.display();
         score+=1;//沒死就加分
         checkCollision();//碰撞系統
     }    
-    countScore();//計分
+    countScore();//計分*/
 }
 
 void updateObstacles(){
     bar.update(); 
-    if(bar.location.x<=-80){
+    if(bar.location.x<=-80){//当右边消失画面，更新的bar
         bar.selectBar();
     }  
     bar.display();
+}
+
+void startPage(){
+    background(200);
+    textSize(100);
+    fill(50);
+    text("DOG Guide",250,100);
+
+}
+
+class button{
+    PImage img;
+    void update(){
+        
+    }
 }
 
 void countScore(){
@@ -53,21 +72,17 @@ void countScore(){
         textSize(100);//字体大小
         fill(#98295F);//颜色
         text("GAME OVER",200,200);//内容和位置
-        textSize(64);//每行字都要寫
+        textSize(64);//每行字都要写
         fill(#98295F);
         text("SCORE:"+str,200,100);
     }
 }
 
-void checkCollision(){
-    if(((dog.location.x<bar.location.x+70)&&(dog.location.x+138>bar.location.x+20))&&
-    ((dog.location.y<bar.location.y+70)&&(dog.location.y+106>bar.location.y+20))){//a的左邊超過b的右邊&&a的右邊超過b的左邊&&a的下邊在b上邊的下邊&&a上邊在a下邊的上邊
-        if(bar.active){
-            //score-=800;
-            println(""+score/10);
-            bar.active=false;//bar停止活動
-            IsGameOver=true;
-        }
+void checkCollision(){//碰撞判定
+    if(((dog.location.x<bar.location.x+50)&&(dog.location.x+138>bar.location.x+40))&&
+    ((dog.location.y<bar.location.y+50)&&(dog.location.y+106>bar.location.y+40))){//a的左边超过b的右边&&a的右边超过b的左边&&a的下边在b上边的下边&&a上边在a下边的上边
+        println(""+score/10);
+        IsGameOver=true;
     }
 }
 
@@ -75,9 +90,8 @@ class Obstacle{
     PVector location= new PVector(1000,300);
     float speed = 5;
     float acc = 1;
-    PImage bgImg;//背景圖片
+    PImage bgImg;//背景图片
     PImage img;
-    boolean active;
     
     void selectBar(){
         int r=int(random(2));
@@ -86,10 +100,8 @@ class Obstacle{
             case 1: img=loadImage("bar1.jpg"); break;
         }
         location.x=1000;
-        active=true;
     }
     void update() {
-        //speed+=acc;
        location.x -= speed;
     }
     
