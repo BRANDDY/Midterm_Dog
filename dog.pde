@@ -5,6 +5,7 @@ Obstacle bar2;
 Obstacle bar3;
 Button st;
 int score;
+int scoHigh;
 boolean IsGameOver = false;
 boolean GameStart = false;
 
@@ -18,6 +19,7 @@ void setup() {
     dog.sprite = loadImage("stand.jpg");//初始dog图片
     bar.selectBar();//初始bar
     score = 0;//初始分数
+    scoHigh = score;
 }
 void draw() {
     if (!GameStart) {
@@ -57,16 +59,13 @@ void startPage() {
 class Button{
     PImage img;
     PVector location = new PVector(300,200);
-    //void update(){
-    
-// }
     
     void display() {
         if (mouseX < (location.x + 412) &&  mouseX>location.x &&  mouseY<(location.y + 96) &&  mouseY>location.y) {
             img = loadImage("buttonOn.jpg");
-            image(img,location.x,location.y);
+            image(img,location.x,location.y);//鼠标经过范围
             if (mousePressed) {
-                GameStart = true;
+                GameStart = true;//开始游戏的判断，true时激活游戏画面
             }
         } else{
             img = loadImage("button.png");
@@ -77,31 +76,36 @@ class Button{
 
 void updateObstacles() {
     bar.update(); 
-    if (bar.location.x <= -  80) {//当右边消失画面，更新的bar
+    if (bar.location.x <= -80) {//当右边消失画面，更新的bar
         bar.selectBar();
     }  
     bar.display();
 }
 
 void countScore() {
-    String str = String.format("% 10d",score / 10);
-    if (!IsGameOver) {
-        textSize(64);
-        fill(#98295F);
-        text("SCORE:" + str,200,100);
-    } else{
+    textSize(64);
+    fill(#98295F);
+    text("SCORE:" + String.format("% 10d",score / 10),200,100);
+    textSize(30);
+    fill(50);
+    text("The Highest:",800,60);
+    if (score > scoHigh) {
+        scoHigh = score;
+    }
+    textSize(30);
+    fill(50);
+    text(String.format("% 10d",scoHigh / 10),800,100);
+
+    if (IsGameOver) {
         textSize(100);//字体大小
         fill(#98295F);//颜色
-        text("GAME OVER",200,200);//内容和位置
-        textSize(64);//每行字都要写
-        fill(#98295F);
-        text("SCORE:" + str,200,100);
+        text("GAME OVER",200,250);//内容和位置
     }
 }
 
 void checkCollision() {//碰撞判定
-    if (((dog.location.x < bar.location.x + 50) &&  (dog.location.x + 138>bar.location.x + 40)) && 
-       ((dog.location.y<bar.location.y + 50) &&  (dog.location.y + 106>bar.location.y + 40))) {//a的左边超过b的右边&&a的右边超过b的左边&&a的下边在b上边的下边&&a上边在a下边的上边
+    if (((dog.location.x < bar.location.x + 50) && (dog.location.x + 138>bar.location.x + 40)) && 
+       ((dog.location.y<bar.location.y + 50) && (dog.location.y + 106>bar.location.y + 40))) {//a的左边超过b的右边&&a的右边超过b的左边&&a的下边在b上边的下边&&a上边在a下边的上边
         println("" + score / 10);
         IsGameOver = true;
     }
@@ -133,7 +137,7 @@ class Obstacle{
 
 class Mover{
     PImage sprite;
-    PVector speed = new PVector(0, - 25);
+    PVector speed = new PVector(0, -25);
     PVector acc = new PVector(0,1.1);
     PVector location = new PVector(0,260);
     
