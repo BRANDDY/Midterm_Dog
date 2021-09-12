@@ -1,8 +1,5 @@
 Mover dog;
 Obstacle bar;
-Obstacle bar1;
-Obstacle bar2;
-Obstacle bar3;
 Button st;
 int score;
 int scoHigh;
@@ -13,19 +10,23 @@ void setup() {
     size(1000,400);//画布大小
     PImage curImg = loadImage("cursor.png");
     cursor(curImg);//光标
+    //Obstacle[] barrier=new Obstacle[4];
     dog = new Mover();
     bar = new Obstacle();
     st = new Button();    
-    dog.sprite = loadImage("stand.jpg");//初始dog图片
+    //dog.sprite = loadImage("stand.jpg");//初始dog图片
+    //setObstacles();//////////////////////////////////////
     bar.selectBar();//初始bar
     score = 0;//初始分数
     scoHigh = score;
 }
 void draw() {
+    //int s=second(1);不行、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、
     if (!GameStart) {
         startPage();
     } else{    
         background(255);//覆盖画布
+        
         if (IsGameOver) {
             bar.display();
             dog.display();//游戏结束保持画面静止
@@ -41,7 +42,7 @@ void draw() {
             score += 1;//沒死就加分
             checkCollision();//碰撞系統
         }   
-        countScore();//計分
+        scoreSystem();//計分*/
     }
 }
 
@@ -50,7 +51,10 @@ void startPage() {
     st.display();
     textSize(100);
     fill(50);
-    text("FEEDING GUIDE",180,100);
+    PFont font;
+    font = loadFont("Algerian-48.vlw");
+    textFont(font,100);
+    text("FEEDING GUIDE",160,120);
     textSize(60);
     fill(50);
     text("START",425,265);
@@ -74,28 +78,20 @@ class Button{
     }
 }
 
-void updateObstacles() {
-    bar.update(); 
-    if (bar.location.x <= -80) {//当右边消失画面，更新的bar
-        bar.selectBar();
-    }  
-    bar.display();
-}
-
-void countScore() {
+void scoreSystem() {
     textSize(64);
     fill(#98295F);
-    text("SCORE:" + String.format("% 10d",score / 10),200,100);
+    text("SCORE: " + String.format("%05d",score / 10),90,100); //补零
     textSize(30);
     fill(50);
-    text("The Highest:",800,60);
+    text("The Highest",800,60);
     if (score > scoHigh) {
         scoHigh = score;
     }
     textSize(30);
     fill(50);
     text(String.format("% 10d",scoHigh / 10),800,100);
-
+    
     if (IsGameOver) {
         textSize(100);//字体大小
         fill(#98295F);//颜色
@@ -109,6 +105,33 @@ void checkCollision() {//碰撞判定
         println("" + score / 10);
         IsGameOver = true;
     }
+}
+
+/*void setObstacles(){
+for (int i=0;i<4;i++){
+int rImg=int(random(4));
+switch(rImg){
+case 0 : barrier[0].img = loadImage("bar0.png"); break;
+case 1 : barrier[1].img = loadImage("bar1.jpg"); break;
+case 2 : barrier[2].img = loadImage("bar2.jpg"); break;
+case 3 : barrier[3].img = loadImage("bar3.png"); break;
+}
+if (i=0){
+barrier[0].location.x=1000;
+}
+else{
+int rLoc=int (random(200,500));
+barrier[i].location.x+=rLoc;
+}
+    }
+}*/
+
+void updateObstacles() {
+    bar.update(); 
+    if (bar.location.x <= -80) {//当右边消失画面，更新的bar
+        bar.selectBar();
+    }  
+    bar.display();
 }
 
 class Obstacle{
@@ -154,7 +177,32 @@ class Mover{
         speed.add(acc);
         location.add(speed);
     }
+    
+    void changeImg(PImage a,PImage b) {
+        PImage img;
+        img = a;
+        a = b;
+        b = img;
+    }
+    
     void display() {
-        image(sprite,location.x,location.y);
+        int s = frameCount % 20;
+        if (location.y < 250) {
+            if(speed.y>1.5){
+               dog.sprite = loadImage("down.png"); 
+            }else{
+                dog.sprite = loadImage("jump.png");
+            }
+        } else{
+            if (s < 8 &&  s > 2) {
+                dog.sprite = loadImage("ran1.png");
+                println("1");
+            } else if (s > 12 &&  s < 18) {
+                dog.sprite = loadImage("run.png");
+            } else{
+                dog.sprite = loadImage("mid.png");
+            }
+        }
+        image(dog.sprite,location.x,location.y);               
     }
 }
