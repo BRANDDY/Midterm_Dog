@@ -32,7 +32,9 @@ void draw() {
     } else{    
         background(255);
         if (IsGameOver) {
-            dog.display();//游戏结束保持画面静止
+            //dog.display();//游戏结束保持画面静止
+            PImage death=loadImage("death.png");
+            image(death,0,260);
             //——————————————————————————————————————————————————
             for (int i = 0;i < 4;i++) { //障碍物跑起来
                 bars[i].display();
@@ -52,7 +54,6 @@ void draw() {
             //——————————————————————————————————————————————————
             score += 1;//沒死就加分
             speedCtrl(score);
-            println(score);
             checkCollision();//碰撞系統
         }   
         scoreSystem();//計分
@@ -60,7 +61,7 @@ void draw() {
 }
 
 void startPage() {
-    background(200);
+    background(#B5E6F2);
     st.display(); //按键变色等等
     textSize(100);
     fill(50);
@@ -79,14 +80,14 @@ class Button{
     
     void display() {
         if (mouseX < (location.x + 412) &&  mouseX>location.x &&  mouseY<(location.y + 96) &&  mouseY>location.y) {
-            img = loadImage("buttonOn.jpg");
-            image(img,location.x,location.y);//鼠标经过范围
+            img = loadImage("buttonOn.png");
+            image(img,location.x,location.y,412,96);//鼠标经过范围
             if (mousePressed) {
                 GameStart = true;//开始游戏的判断，true时激活游戏画面
             }
         } else{
             img = loadImage("button.png");
-            image(img,location.x,location.y);
+            image(img,location.x,location.y,412,96);
         }
     }
 }
@@ -128,6 +129,5 @@ int speedCtrl(int s) {
     if (s % 500 == 0) {//////////////////////////////////
         speed += 1;
     }
-    println(speed);
     return speed;
 }
